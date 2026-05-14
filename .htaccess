@@ -1,0 +1,14 @@
+# Root .htaccess - if someone misconfigures and points Apache at the
+# project root instead of public/, redirect all traffic into public/.
+# This DOES NOT replace correct DocumentRoot configuration; it is a
+# safety net only.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block direct access to anything outside public/.
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Defense-in-depth: if mod_rewrite is unavailable, deny browsing the root.
+Options -Indexes

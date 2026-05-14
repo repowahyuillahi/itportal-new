@@ -1,0 +1,3 @@
+# Deny all direct access. storage/ contains logs, exports, uploads, and
+# session files which must never be served by the web server.
+Require all denied

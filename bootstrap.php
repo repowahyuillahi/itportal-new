@@ -48,6 +48,17 @@ error_reporting(E_ALL);
 // 5. Session.
 App\Core\Session::start();
 
+// 5b. Security baseline: HTTPS redirect (prod only) + security headers.
+//     Done after session start so we can still set headers, but before
+//     any controller has a chance to emit body content.
+if (PHP_SAPI !== 'cli') {
+    if (App\Core\Security::enforceHttpsIfProduction()) {
+        // Redirect emitted; nothing more to do for this request.
+        return static fn(App\Core\Request $r): string => '';
+    }
+    App\Core\Security::sendHeaders();
+}
+
 // 6. Views.
 App\Core\View::setViewsPath(__DIR__ . '/resources/views');
 

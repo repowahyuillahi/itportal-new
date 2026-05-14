@@ -93,13 +93,19 @@
 
 ## Phase 9 - Security And QA
 
-- [ ] Complete security checklist.
-- [ ] Test auth/roles.
-- [ ] Test CSRF.
-- [ ] Test lead time.
-- [ ] Test filters.
-- [ ] Test Excel/PDF output.
-- [ ] Test mobile layout.
+- [x] Security checklist updated and mostly green (`docs/security-checklist.md`).
+- [x] Auth/role checks (admin, it_staff, manager, viewer) covered by smoke tests Phase 4-9.
+- [x] CSRF enforcement verified on all POST routes (missing + wrong token both -> 419).
+- [x] Lead time tested *(Phase 4 smoke)*.
+- [x] Filters tested *(Phase 6 + 7 smokes)*.
+- [x] Excel/PDF output tested *(Phase 7 smoke + visual QA approved)*.
+- [x] Mobile layout tested *(Phase 6 smoke + manual)*.
+- [x] Login throttle (`LoginThrottle`) - 5/email + 20/IP per 15 min, 429 + Retry-After.
+- [x] Security headers (CSP / XFO / RP / XCTO + HSTS in prod) via `App\Core\Security`.
+- [x] HTTPS redirect in production.
+- [x] `.htaccess` deny on `app/`, `config/`, `database/`, `storage/`; root rewrites to `public/`.
+- [x] Penetration smoke `scripts/smoke_phase9.php` (XSS escape, CSRF, IDOR, headers, throttle, path traversal, session fixation).
+- [x] Production deploy checklist documented.
 
 ## Phase 10 - Deployment
 

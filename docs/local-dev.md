@@ -82,6 +82,35 @@ Output ringkasan ditulis ke stdout. Log tersimpan di
 & 'C:\xampp\php\php.exe' scripts/create_admin.php --email=admin@itportal.local --name=Admin --password=secret123
 ```
 
+## Smoke Test Phase 9 (Security & QA)
+
+Penetration smoke: security headers, login throttle (429 setelah 5
+percobaan gagal/email atau 20/IP per 15 menit), CSRF enforcement, IDOR,
+XSS escape, path traversal di filename export, dan session fixation
+guard. Semua jalan tanpa menulis ke DB selain audit_logs (yang memang
+intended untuk login.failed).
+
+```powershell
+$proc = Start-Process -FilePath 'C:\xampp\php\php.exe' `
+    -ArgumentList "-S","127.0.0.1:8772","-t","public" `
+    -WindowStyle Hidden -PassThru
+Start-Sleep -Milliseconds 1500
+& 'C:\xampp\php\php.exe' scripts/smoke_phase9.php
+Stop-Process -Id $proc.Id -Force
+```
+
+Smoke test akan **membersihkan sendiri** baris `audit_logs` yang
+dibuatnya untuk email throttle test (`throttle@itportal.local`,
+`someone-else@itportal.local`).
+
+Untuk uji throttle manual:
+
+```powershell
+# 1) Coba login salah 6 kali dengan email yang sama -> 429.
+# 2) Tunggu 15 menit ATAU bersihkan via SQL:
+#    DELETE FROM audit_logs WHERE action='login.failed' AND created_at > NOW() - INTERVAL 1 HOUR;
+```
+
 ## Smoke Test Phase 8 (Source Data Import Dry-Run)
 
 Memvalidasi bahwa kedua CLI dry-run berjalan tanpa menulis ke DB,
