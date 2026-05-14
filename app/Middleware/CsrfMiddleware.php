@@ -25,7 +25,9 @@ final class CsrfMiddleware
             }
             if (!Csrf::verify($token)) {
                 Session::flash('error', 'Permintaan ditolak (CSRF token tidak valid).');
-                return Response::html('<h1>419 - CSRF token mismatch</h1>', 419);
+                return Response::errorPage(419, '419 - CSRF Mismatch',
+                    'Permintaan ditolak karena token keamanan (CSRF) tidak valid. ' .
+                    'Coba muat ulang halaman lalu kirim form lagi.');
             }
         }
         return (string) $next($request);

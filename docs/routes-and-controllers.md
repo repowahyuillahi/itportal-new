@@ -53,17 +53,66 @@ Currently wired:
 
 | Method | Route | Middleware |
 |--------|-------|-----------|
-| GET  | `/health`    | (none, public) |
-| GET  | `/`          | (none, redirects) |
-| GET  | `/login`     | `GuestMiddleware` |
-| POST | `/login`     | `CsrfMiddleware`, `GuestMiddleware` |
-| POST | `/logout`    | `CsrfMiddleware`, `AuthMiddleware` |
-| GET  | `/dashboard` | `AuthMiddleware` |
+| GET  | `/health`              | (none, public) |
+| GET  | `/`                    | (none, redirects) |
+| GET  | `/login`               | `GuestMiddleware` |
+| POST | `/login`               | `CsrfMiddleware`, `GuestMiddleware` |
+| POST | `/logout`              | `CsrfMiddleware`, `AuthMiddleware` |
+| GET  | `/dashboard`           | `AuthMiddleware` |
+| GET  | `/tickets`             | `AuthMiddleware` |
+| GET  | `/tickets/create`      | `AuthMiddleware`, `RoleMiddleware::only(['admin','it_staff'])` |
+| POST | `/tickets`             | `CsrfMiddleware`, `AuthMiddleware`, role admin/it_staff |
+| GET  | `/tickets/{id}`        | `AuthMiddleware` |
+| GET  | `/tickets/{id}/edit`   | `AuthMiddleware`, role admin/it_staff |
+| POST | `/tickets/{id}`        | `CsrfMiddleware`, `AuthMiddleware`, role admin/it_staff |
+| POST | `/tickets/{id}/close`  | `CsrfMiddleware`, `AuthMiddleware`, role admin/it_staff |
+| GET  | `/dealers`             | `AuthMiddleware` |
+| GET  | `/dealers/create`      | `AuthMiddleware`, `RoleMiddleware::only(['admin'])` |
+| POST | `/dealers`             | `CsrfMiddleware`, `AuthMiddleware`, role admin |
+| GET  | `/dealers/{id}/edit`   | `AuthMiddleware`, role admin |
+| POST | `/dealers/{id}`        | `CsrfMiddleware`, `AuthMiddleware`, role admin |
+| POST | `/dealers/{id}/status` | `CsrfMiddleware`, `AuthMiddleware`, role admin |
+| GET  | `/items`               | `AuthMiddleware` |
+| GET  | `/items/create`        | `AuthMiddleware`, role admin |
+| POST | `/items`               | `CsrfMiddleware`, `AuthMiddleware`, role admin |
+| GET  | `/items/{id}/edit`     | `AuthMiddleware`, role admin |
+| POST | `/items/{id}`          | `CsrfMiddleware`, `AuthMiddleware`, role admin |
+| POST | `/items/{id}/status`   | `CsrfMiddleware`, `AuthMiddleware`, role admin |
+| GET  | `/reports/monthly`     | `AuthMiddleware` (read-only preview; export buttons placeholder) |
 
-Phase 4-6 will add `/tickets*`, `/dealers*`, `/items*`, `/reports/monthly`,
-`/exports/monthly/*` with `AuthMiddleware` and (for mutating routes) the
-appropriate `RoleMiddleware::only(['admin'])` /
-`RoleMiddleware::only(['admin', 'it_staff'])`.
+Phase 7 will add `/exports/monthly/{xlsx,pdf}`.
+
+## Error Pages (Phase 6)
+
+All non-redirect error responses (403/404/419) flow through
+`Response::errorPage($status, $heading, $message)` which renders
+`resources/views/errors/generic.php` inside `layouts/app`. Sites that
+emit error pages:
+
+- `Router::dispatch` -> `404` for unknown routes.
+- `RoleMiddleware::handle` -> `403` for forbidden roles.
+- `CsrfMiddleware::handle` -> `419` for invalid/missing CSRF token.
+- `*Controller::edit/show/toggleStatus` -> `404` for missing IDs.
+
+## Master Data Conventions (Phase 5)
+
+- **Soft toggle only** — dealers and items are never deleted. Use the
+  `POST /{resource}/{id}/status` endpoint (admin-only, CSRF-protected) to
+  flip between `active` and `inactive`. Provide `status=active|inactive` in
+  the form body to set explicitly; otherwise the current value is flipped.
+- **Ticket form selectors** call `listActive()` on the repositories so
+  inactive rows disappear from new tickets while still rendering on
+  existing ticket details (which join through plain `INNER JOIN`).
+- **Uniqueness**: dealer `code` is unique only when present (NULL allowed
+  multiple times). Item `slug` is always unique; auto-generated from
+  `name` when omitted (lowercase ascii + hyphens, suffixed `-2`, `-3`, ...
+  to deduplicate). Slug pattern: `^[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?$`.
+
+## Ticket Number Format
+
+`TKT-YYYYMM-####` where `YYYYMM` comes from `report_date` and `####` is a
+zero-padded counter scoped per-month. Generation is delegated to
+`TicketRepository::nextTicketNumber()` (queries the latest matching prefix).
 
 ## Controller Rule
 

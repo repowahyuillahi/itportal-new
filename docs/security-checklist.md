@@ -26,16 +26,16 @@
 
 ## Database
 
-- [ ] All queries use PDO prepared statements.
-- [ ] No user input is concatenated into SQL.
-- [ ] Migrations are used for schema.
-- [ ] Database backup is documented.
+- [x] All queries use PDO prepared statements.
+- [x] No user input is concatenated into SQL.
+- [x] Migrations are used for schema.
+- [ ] Database backup is documented. *(Phase 11)*
 
 ## Roles
 
-- [ ] Manager/viewer cannot mutate data. *(Phase 5)*
-- [ ] Master data mutation requires admin. *(Phase 5)*
-- [ ] Ticket mutation requires admin or it_staff. *(Phase 4)*
+- [x] Manager/viewer cannot mutate data. *(verified: tickets Phase 4, master data Phase 5; smoke tests cover 403 paths)*
+- [x] Master data mutation requires admin. *(Phase 5: dealers + items)*
+- [x] Ticket mutation requires admin or it_staff. *(Phase 4)*
 - [ ] Export requires authenticated user. *(Phase 7)*
 
 ## Export/Upload

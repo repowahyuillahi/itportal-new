@@ -82,6 +82,63 @@ Output ringkasan ditulis ke stdout. Log tersimpan di
 & 'C:\xampp\php\php.exe' scripts/create_admin.php --email=admin@itportal.local --name=Admin --password=secret123
 ```
 
+## Smoke Test Phase 6 (Dashboard + Reports + Error Pages)
+
+Validasi ringkasan dashboard cocok dengan SQL count, monthly report dengan
+filter dan periode kosong, serta error pages 403/404/419 ter-render lewat
+layout aplikasi.
+
+```powershell
+$proc = Start-Process -FilePath 'C:\xampp\php\php.exe' `
+    -ArgumentList "-S","127.0.0.1:8770","-t","public" `
+    -WindowStyle Hidden -PassThru
+Start-Sleep -Milliseconds 800
+& 'C:\xampp\php\php.exe' scripts/smoke_phase6.php
+Stop-Process -Id $proc.Id -Force
+```
+
+Skrip ini self-bootstrap user `admin@itportal.local`,
+`viewer@itportal.local`, dan `it@itportal.local` jika belum ada. Output
+diakhiri `ALL PASSED`. Periksa `storage/logs/php-error.log` tetap kosong.
+
+## Smoke Test Phase 5 (Master Data)
+
+Tes CRUD dealer + item, role guard admin-only, dan integrasi dengan ticket
+form (inactive tidak muncul di select baru, tapi ticket lama tetap bisa
+ditampilkan).
+
+```powershell
+$proc = Start-Process -FilePath 'C:\xampp\php\php.exe' `
+    -ArgumentList "-S","127.0.0.1:8769","-t","public" `
+    -WindowStyle Hidden -PassThru
+Start-Sleep -Milliseconds 800
+& 'C:\xampp\php\php.exe' scripts/smoke_phase5.php
+Stop-Process -Id $proc.Id -Force
+```
+
+Skrip otomatis membuat user test:
+- `viewer@itportal.local` (password `viewer123`)
+- `it@itportal.local` (password `itstaff123`)
+
+Output diakhiri `ALL PASSED`.
+
+## Smoke Test Phase 4 (Tickets)
+
+Pastikan migrate + seed sudah jalan, dan ada admin user. Lalu:
+
+```powershell
+& 'C:\xampp\php\php.exe' scripts/seed.php dev_dealers   # 3 dealer demo
+$proc = Start-Process -FilePath 'C:\xampp\php\php.exe' `
+    -ArgumentList "-S","127.0.0.1:8768","-t","public" `
+    -WindowStyle Hidden -PassThru
+Start-Sleep -Milliseconds 800
+& 'C:\xampp\php\php.exe' scripts/smoke_phase4.php
+Stop-Process -Id $proc.Id -Force
+```
+
+Harapan: `ALL PASSED`. Skrip otomatis membuat user `viewer@itportal.local`
+(password `viewer123`) untuk uji read-only.
+
 ## Smoke Test Phase 3 (Auth)
 
 Tes login/logout/CSRF/role guard otomatis lewat cURL:

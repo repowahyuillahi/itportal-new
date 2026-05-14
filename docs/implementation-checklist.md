@@ -43,28 +43,29 @@
 
 ## Phase 4 - Ticket Core
 
-- [ ] Ticket list with filters.
-- [ ] Ticket create form/action.
-- [ ] Ticket detail.
-- [ ] Ticket edit form/action.
-- [ ] Ticket close action.
-- [ ] Lead time calculation.
-- [ ] Attachment metadata.
+- [x] Ticket list with filters (`month`, `year`, `status`, `dealer_id`, `item_id`, `q`, `page`).
+- [x] Ticket create form/action.
+- [x] Ticket detail.
+- [x] Ticket edit form/action.
+- [x] Ticket close action (with lead time & closed_by/closed_at).
+- [x] Lead time calculation (`lead_time_seconds = finished_at - started_at`).
+- [ ] Attachment metadata. *(deferred - upload UI not in Phase 4 scope; row-level support exists via migrations)*
 
 ## Phase 5 - Master Data
 
-- [ ] Dealer list/create/edit/activate/deactivate.
-- [ ] Item list/create/edit/activate/deactivate.
-- [ ] Hide inactive records from new-ticket select fields.
-- [ ] Add import planning page/script after source files are mapped.
+- [x] Dealer list/create/edit/activate/deactivate (admin-only mutating, audit `dealer.create/update/status`).
+- [x] Item list/create/edit/activate/deactivate (admin-only mutating, audit `item.create/update/status`).
+- [x] Hide inactive records from new-ticket select fields (`listActive()` only).
+- [ ] Add import planning page/script after source files are mapped. *(deferred - import not in V1 scope)*
 
 ## Phase 6 - Dashboard And UI
 
-- [ ] Dashboard summary cards.
-- [ ] Desktop ticket table.
-- [ ] Mobile ticket cards.
-- [ ] Responsive forms.
-- [ ] Report filter page.
+- [x] Dashboard summary cards (total, status breakdown, avg lead time, top dealers, top items, recent tickets).
+- [x] Desktop ticket table + mobile cards (already in Phase 4, polished here).
+- [x] Responsive forms (sticky form-actions on mobile for ticket form).
+- [x] Report filter page `/reports/monthly` (filters: month/year/status/dealer/item/q; export buttons disabled placeholders).
+- [x] Error pages 403/404/419 rendered through `layouts/app` via `Response::errorPage()`.
+- [x] Skip-to-content link + `<main id="content" tabindex="-1">` for keyboard a11y.
 
 ## Phase 7 - Export
 

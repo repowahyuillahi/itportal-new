@@ -40,4 +40,20 @@ final class Response
     {
         return self::html($body, 500);
     }
+
+    /**
+     * Render a layout-wrapped error page using `errors/generic.php`.
+     *
+     * @param array<string, mixed> $extra extra view data
+     */
+    public static function errorPage(int $status, string $heading, string $message, array $extra = []): string
+    {
+        $data = array_merge([
+            'title'   => $status . ' - ITPortal',
+            'status'  => $status,
+            'heading' => $heading,
+            'message' => $message,
+        ], $extra);
+        return self::html(View::render('errors/generic', $data), $status);
+    }
 }

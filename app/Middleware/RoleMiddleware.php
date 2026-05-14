@@ -39,7 +39,8 @@ final class RoleMiddleware
         }
         if (!Auth::hasAnyRole($this->allowed)) {
             Session::flash('error', 'Akses ditolak. Role kamu tidak diizinkan untuk halaman ini.');
-            return Response::html('<h1>403 Forbidden</h1>', 403);
+            return Response::errorPage(403, '403 Forbidden',
+                'Akses ditolak. Role akun kamu tidak diizinkan untuk halaman ini.');
         }
         return (string) $next($request);
     }

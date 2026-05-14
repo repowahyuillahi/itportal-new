@@ -134,6 +134,145 @@ main { padding: 24px 0 48px; }
     font-size: 13px;
 }
 
+/* Page headers + grid layouts */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0 16px;
+    flex-wrap: wrap;
+}
+.page-header h1 { margin: 0; font-size: 22px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.page-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px 24px;
+}
+.detail-grid > div > .muted:first-child { font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+.detail-grid > div > div:last-child { font-weight: 500; }
+
+/* Tables (desktop) */
+.table-wrap { overflow-x: auto; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); }
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.data-table th, .data-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--color-border); }
+.data-table th { background: #fafbfc; font-weight: 600; }
+.data-table tbody tr:hover { background: #f7f9fb; }
+.data-table a { color: var(--color-primary); text-decoration: none; }
+
+/* Mobile cards (alternative to table). Hidden on desktop via media query. */
+.cards-mobile { display: none; }
+.ticket-card { display: block; margin-bottom: 10px; text-decoration: none; color: inherit; }
+.ticket-card-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+
+@media (max-width: 720px) {
+    .table-wrap { display: none; }
+    .cards-mobile { display: block; }
+}
+
+/* Status badges */
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; border: 1px solid transparent; }
+.badge-open        { background: #e7f1ff; color: #0b5fb8; border-color: #c8dcfb; }
+.badge-in-progress { background: #fff3cd; color: #8a5a00; border-color: #ffe7a0; }
+.badge-pending     { background: #f1e7ff; color: #5b3a9c; border-color: #ddc7fb; }
+.badge-closed      { background: #e6f6ec; color: #1f7a3c; border-color: #b6e2c3; }
+.badge-cancelled   { background: #f1f1f1; color: #555; border-color: #d8d8d8; }
+
+/* Filter bar */
+.filter-bar { padding: 14px; margin-bottom: 14px; }
+.filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.field-grow { grid-column: span 2; }
+.filter-actions { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+
+/* Row actions for tables (edit / toggle status etc.) */
+.row-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.row-actions .inline { display: inline; }
+.master-card { margin-bottom: 10px; }
+.master-card .row-actions { margin-top: 8px; }
+
+/* Pagination */
+.pagination { display: flex; gap: 10px; align-items: center; justify-content: center; padding: 14px 0; flex-wrap: wrap; }
+
+/* Form layout shared */
+.ticket-form .form-actions, .form-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.field small.error { color: var(--color-error-text); display: block; margin-top: 4px; font-size: 12px; }
+.prewrap { white-space: pre-wrap; margin: 0; }
+
+/* Skip-to-content link (a11y) */
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    padding: 8px 12px;
+    background: var(--color-primary);
+    color: #fff;
+    z-index: 1000;
+    text-decoration: none;
+    border-radius: 0 0 6px 0;
+}
+.skip-link:focus { left: 0; outline: 2px solid #fff; }
+main:focus { outline: none; }
+
+/* Dashboard stat grid */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.stat-card .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--color-muted); }
+.stat-card .stat-value { font-size: 28px; font-weight: 700; line-height: 1.1; }
+.stat-card-status .stat-label { text-transform: none; letter-spacing: 0; }
+
+/* Top rank lists */
+.rank-list { padding-left: 20px; margin: 0; }
+.rank-list li { padding: 4px 0; display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.rank-list li a { color: var(--color-primary); text-decoration: none; }
+.rank-list li a:hover { text-decoration: underline; }
+.rank-count { color: var(--color-muted); font-size: 13px; white-space: nowrap; }
+
+.dash-tops { margin-bottom: 16px; }
+
+/* Report summary inline list */
+.summary-inline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+    align-items: center;
+}
+.summary-inline li { display: inline-flex; gap: 6px; align-items: center; }
+
+/* Error pages */
+.error-page {
+    text-align: center;
+    padding: 40px 16px 60px;
+}
+.error-page .error-code {
+    font-size: 72px;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+.error-page h1 { margin: 0 0 8px; font-size: 22px; }
+
 /* Mobile tweaks */
 @media (max-width: 640px) {
     .topbar .container {
@@ -142,4 +281,18 @@ main { padding: 24px 0 48px; }
         gap: 6px;
     }
     .auth-card { margin: 16px auto; }
+    .field-grow { grid-column: span 1; }
+    .stat-card .stat-value { font-size: 24px; }
+    /* Sticky form actions on long ticket forms */
+    .ticket-form .form-actions {
+        position: sticky;
+        bottom: 0;
+        background: var(--color-surface);
+        padding: 10px 0;
+        border-top: 1px solid var(--color-border);
+        margin: 8px -14px -14px;
+        padding-left: 14px;
+        padding-right: 14px;
+        z-index: 5;
+    }
 }

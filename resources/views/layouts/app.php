@@ -11,11 +11,17 @@
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
+    <a class="skip-link" href="#content">Lewati ke konten</a>
     <header class="topbar">
         <div class="container">
             <a class="brand" href="/">ITPortal</a>
-            <nav class="nav">
+            <nav class="nav" aria-label="Navigasi utama">
                 <?php if (\App\Core\Auth::check()): ?>
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/tickets">Tickets</a>
+                    <a href="/dealers">Dealers</a>
+                    <a href="/items">Items</a>
+                    <a href="/reports/monthly">Reports</a>
                     <span class="muted">Hi, <?= e(\App\Core\Auth::user()['name'] ?? 'user') ?></span>
                     <form method="post" action="/logout" class="inline">
                         <?= csrf_field() ?>
@@ -28,7 +34,7 @@
         </div>
     </header>
 
-    <main class="container">
+    <main id="content" class="container" tabindex="-1">
         <?php if ($flashError = flash('error')): ?>
             <div class="alert alert-error"><?= e($flashError) ?></div>
         <?php endif; ?>

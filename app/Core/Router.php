@@ -74,7 +74,8 @@ final class Router
             }
         }
 
-        return Response::notFound('<h1>404 Not Found</h1><p>' . htmlspecialchars($path) . '</p>');
+        return Response::errorPage(404, '404 Not Found',
+            'Halaman "' . $path . '" tidak ditemukan.');
     }
 
     /**
