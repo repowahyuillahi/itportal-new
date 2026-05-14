@@ -1,0 +1,22 @@
+/vendor/
+/node_modules/
+/.env
+/.idea/
+/.vscode/
+/storage/logs/*
+/storage/exports/*
+/storage/uploads/*
+!/storage/logs/.gitkeep
+!/storage/exports/.gitkeep
+!/storage/uploads/.gitkeep
+*.log
+.DS_Store
+Thumbs.db
+/scripts/source-inspection.log
+
+# Local/source materials - keep internal operational files out of GitHub.
+*.xlsx
+*.xls
+*.csv
+*.pptx
+*.ppt

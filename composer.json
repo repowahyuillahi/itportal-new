@@ -1,0 +1,31 @@
+{
+    "name": "itportal/itportal",
+    "description": "ITPortal - internal IT helpdesk and Support Maintenance Report (PHP native modular).",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.2",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {},
+    "suggest": {
+        "phpoffice/phpspreadsheet": "Excel export (added in Phase 7).",
+        "dompdf/dompdf": "PDF export (added in Phase 7).",
+        "vlucas/phpdotenv": "Optional .env loader; project ships with a minimal built-in loader."
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "files": [
+            "app/Helpers/escape.php",
+            "app/Helpers/date.php"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
+}
