@@ -82,6 +82,33 @@ Output ringkasan ditulis ke stdout. Log tersimpan di
 & 'C:\xampp\php\php.exe' scripts/create_admin.php --email=admin@itportal.local --name=Admin --password=secret123
 ```
 
+## Smoke Test Phase 8 (Source Data Import Dry-Run)
+
+Memvalidasi bahwa kedua CLI dry-run berjalan tanpa menulis ke DB,
+mengeluarkan diff report yang valid, masking PIN, menyembunyikan p12
+absolute paths, dan tidak mengubah jumlah baris di `dealers`, `tickets`,
+`items`, `users`, `audit_logs`, `export_jobs`.
+
+```powershell
+# Dry-run dealer + certificate (read-only, no DB writes):
+& 'C:\xampp\php\php.exe' scripts/import_dryrun_dealers.php
+& 'C:\xampp\php\php.exe' scripts/import_dryrun_certificates.php
+
+# JSON output untuk review owner:
+& 'C:\xampp\php\php.exe' scripts/import_dryrun_dealers.php --json `
+    > storage\exports\dealer-dryrun.json
+& 'C:\xampp\php\php.exe' scripts/import_dryrun_certificates.php --json `
+    > storage\exports\cert-dryrun.json
+
+# Smoke test (assert no DB writes):
+& 'C:\xampp\php\php.exe' scripts/smoke_phase8.php
+```
+
+Sumber default: `data-lengkap-sertifikat.csv` di root project. Override
+dengan `--source=path\to\file.csv` jika perlu. Apply-mode importer
+belum ada (tertahan menunggu approval owner atas mapping). Lihat
+`docs/import-mapping.md`.
+
 ## Smoke Test Phase 7 (Export Excel + PDF)
 
 Validasi semua role login bisa download `.xlsx` dan `.pdf`, content-type

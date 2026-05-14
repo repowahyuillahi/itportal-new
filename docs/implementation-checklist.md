@@ -78,12 +78,18 @@
 - [x] Audit `export.create` per download.
 - [x] Row cap 5000 with layout-wrapped 413 error page.
 
-## Phase 8 - Source Data Import
+## Phase 8 - Source Data Import (Dry-Run)
 
-- [ ] Create dry-run importer for dealer data once source file is identified.
-- [ ] Create dry-run importer for item/category candidates.
-- [ ] Create dry-run importer for certificate/DpackWeb data if included in V1.
-- [ ] Import only after owner reviews dry-run output.
+- [x] Mapping spec written (`docs/import-mapping.md`).
+- [x] CSV source loader (`App\Importers\CertificateCsvSource`), pure PHP `fgetcsv`, BOM-aware, no DB access.
+- [x] Dry-run dealer importer (`App\Importers\DealerImportDryRun`) producing verdicts: `would_create`, `would_update`, `match`, `ambiguous`, `unparseable`.
+- [x] Dry-run certificate importer (`App\Importers\CertificateImportDryRun`) producing per-row flags and proposed `dealer_certificates` schema.
+- [x] CLI scripts: `scripts/import_dryrun_dealers.php`, `scripts/import_dryrun_certificates.php` (text + `--json` + `--source=PATH`).
+- [x] PIN masking + p12 absolute paths hidden by default (`--show-paths` opt-in).
+- [x] Smoke test asserts **zero DB writes** across `dealers`, `tickets`, `items`, `users`, `audit_logs`, `export_jobs`.
+- [ ] Item/category dry-run **deferred** - no canonical source file identified (items are seeded; the operational xlsx files are monitoring logs, not master data).
+- [ ] Apply-mode importer **deferred** - to be built after owner reviews the dry-run report and approves the mapping. Will include audit `dealer.import.create` / `dealer.import.update`.
+- [ ] `dealer_certificates` table migration **deferred** - schema proposed in dry-run report; commit migration only after schema is approved.
 
 ## Phase 9 - Security And QA
 
