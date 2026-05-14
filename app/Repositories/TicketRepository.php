@@ -301,15 +301,30 @@ final class TicketRepository
     }
 
     /**
-     * Flat list for the report preview - re-uses the same filter shape as
-     * paginate() but with no pagination, capped at $limit rows.
+     * Count rows that match the report filter (no LIMIT). Used by export
+     * controller to enforce the row cap before materializing the full set.
+     *
+     * @param array<string, mixed> $filters
+     */
+    public function countForReport(array $filters): int
+    {
+        [$where, $params] = $this->buildWhere($filters);
+        $sql = 'SELECT COUNT(*) ' . self::FROM_BASE . ' ' . $where;
+        $stmt = $this->pdo()->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Flat list for the report preview / export - reuses the paginate()
+     * filter shape, no pagination, capped at $limit rows.
      *
      * @param array<string, mixed> $filters
      * @return array<int, array<string, mixed>>
      */
     public function listForReport(array $filters, int $limit = 500): array
     {
-        $limit = max(1, min(2000, $limit));
+        $limit = max(1, min(5000, $limit));
         [$where, $params] = $this->buildWhere($filters);
         $sql = 'SELECT ' . self::SELECT_BASE . ' ' . self::FROM_BASE . ' ' . $where
              . ' ORDER BY t.report_date DESC, t.id DESC LIMIT :lim';

@@ -248,8 +248,14 @@ check('viewer sees Reports link', strpos($r['body'], 'href="/reports/monthly"') 
 echo "\n=== /reports/monthly ===\n";
 $r = req($base, 'GET', '/reports/monthly', [], $jarA);
 check('admin /reports/monthly 200', $r['status'] === 200);
-check('export Excel button disabled', preg_match('/<button[^>]*disabled[^>]*>\s*Export Excel/i', $r['body']) === 1);
-check('export PDF button disabled', preg_match('/<button[^>]*disabled[^>]*>\s*Export PDF/i', $r['body']) === 1);
+// Export buttons: Phase 6 shipped these as disabled placeholders, but
+// Phase 7 activated them as <a> links to /exports/monthly/*. We only
+// assert they're present somehow (button OR link) so this script keeps
+// working across phases.
+check('export Excel control present',
+    preg_match('/Export Excel/i', $r['body']) === 1);
+check('export PDF control present',
+    preg_match('/Export PDF/i', $r['body']) === 1);
 
 // Filter status -> only matching rows (basic sanity).
 $r = req($base, 'GET', '/reports/monthly?status=closed&month=' . $month . '&year=' . $year, [], $jarA);

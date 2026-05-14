@@ -82,6 +82,32 @@ Output ringkasan ditulis ke stdout. Log tersimpan di
 & 'C:\xampp\php\php.exe' scripts/create_admin.php --email=admin@itportal.local --name=Admin --password=secret123
 ```
 
+## Smoke Test Phase 7 (Export Excel + PDF)
+
+Validasi semua role login bisa download `.xlsx` dan `.pdf`, content-type
+benar, filename mengandung tahun/bulan, urutan kolom Excel cocok dengan
+`docs/export-report-spec.md`, row count cocok dengan SQL oracle, filter
+diteruskan ke export, `export_jobs` + `audit_logs export.create` tercatat,
+dan empty-period tetap menghasilkan file (header saja, 0 data row).
+
+Prasyarat: `composer.phar require phpoffice/phpspreadsheet dompdf/dompdf`
+sudah dijalankan, ekstensi PHP `ext-gd` dan `ext-zip` aktif di
+`C:\xampp\php\php.ini` (uncomment baris `extension=gd` dan
+`extension=zip`, restart PHP).
+
+```powershell
+$proc = Start-Process -FilePath 'C:\xampp\php\php.exe' `
+    -ArgumentList "-S","127.0.0.1:8771","-t","public" `
+    -WindowStyle Hidden -PassThru
+Start-Sleep -Milliseconds 1200
+& 'C:\xampp\php\php.exe' scripts/smoke_phase7.php
+Stop-Process -Id $proc.Id -Force
+```
+
+File hasil export disimpan di `storage/exports/` dengan nama
+`Support_Maintenance_Report_{YYYY}-{MM}_{YYYYMMDD-HHMMSS}.{xlsx,pdf}`.
+Folder ini sudah ada di `.gitignore` (kecuali `.gitkeep`).
+
 ## Smoke Test Phase 6 (Dashboard + Reports + Error Pages)
 
 Validasi ringkasan dashboard cocok dengan SQL count, monthly report dengan

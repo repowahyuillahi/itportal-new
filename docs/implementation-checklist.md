@@ -69,11 +69,14 @@
 
 ## Phase 7 - Export
 
-- [ ] Monthly report query.
-- [ ] Excel export using PhpSpreadsheet.
-- [ ] PDF export using Dompdf or mPDF.
-- [ ] Export file records.
-- [ ] Download action.
+- [x] Monthly report query (`TicketRepository::listForReport` + `countForReport`, cap 5000).
+- [x] Excel export using PhpSpreadsheet (`phpoffice/phpspreadsheet ^5.3`).
+- [x] PDF export using Dompdf (`dompdf/dompdf ^3.1`, landscape A4).
+- [x] Export file records (`export_jobs` table, type + filters_json + file_path + created_by).
+- [x] Download action (`Response::download()` streaming, attachment disposition).
+- [x] Column order locked to `docs/export-report-spec.md` (No, Status, Tanggal, Pelapor, Dealer, Laporan Awal, Pengecekan, Solusi, Item, Waktu Mulai, Waktu Selesai, Lead Time).
+- [x] Audit `export.create` per download.
+- [x] Row cap 5000 with layout-wrapped 413 error page.
 
 ## Phase 8 - Source Data Import
 

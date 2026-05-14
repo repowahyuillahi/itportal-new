@@ -42,6 +42,43 @@ final class Response
     }
 
     /**
+     * Stream a file from disk as an attachment download.
+     *
+     * - Sends headers and `readfile()` directly so large files (Excel/PDF
+     *   exports) don't have to be loaded into memory.
+     * - Returns the empty string so the front controller has nothing else
+     *   to echo.
+     * - The caller is responsible for picking a safe `$absolutePath`
+     *   (never derived from user input).
+     */
+    public static function download(string $absolutePath, string $filename, string $contentType): string
+    {
+        if (!is_file($absolutePath) || !is_readable($absolutePath)) {
+            return self::errorPage(
+                500,
+                'Gagal Mengunduh',
+                'File hasil export tidak ditemukan di server. Silakan coba lagi atau hubungi admin.'
+            );
+        }
+        // Sanitize filename: strip any path separators or control chars.
+        $safeName = preg_replace('/[\\\\\\/\\r\\n"]+/', '_', $filename) ?? 'download';
+        $size = filesize($absolutePath);
+        http_response_code(200);
+        header('Content-Type: ' . $contentType);
+        header('Content-Disposition: attachment; filename="' . $safeName . '"');
+        if ($size !== false) {
+            header('Content-Length: ' . $size);
+        }
+        header('Cache-Control: private, no-store, max-age=0');
+        header('Pragma: no-cache');
+        header('X-Content-Type-Options: nosniff');
+        // Flush PHP output buffers so headers + body line up cleanly.
+        while (ob_get_level() > 0) { ob_end_clean(); }
+        readfile($absolutePath);
+        return '';
+    }
+
+    /**
      * Render a layout-wrapped error page using `errors/generic.php`.
      *
      * @param array<string, mixed> $extra extra view data

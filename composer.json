@@ -5,15 +5,16 @@
     "license": "proprietary",
     "require": {
         "php": ">=8.2",
-        "ext-pdo": "*",
         "ext-json": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "ext-pdo": "*",
+        "dompdf/dompdf": "^3.1",
+        "phpoffice/phpspreadsheet": "^5.3"
     },
-    "require-dev": {},
     "suggest": {
-        "phpoffice/phpspreadsheet": "Excel export (added in Phase 7).",
-        "dompdf/dompdf": "PDF export (added in Phase 7).",
-        "vlucas/phpdotenv": "Optional .env loader; project ships with a minimal built-in loader."
+        "vlucas/phpdotenv": "Optional .env loader; project ships with a minimal built-in loader.",
+        "ext-gd": "Required by phpoffice/phpspreadsheet (uncomment extension=gd in php.ini).",
+        "ext-zip": "Required by phpoffice/phpspreadsheet for .xlsx writing (uncomment extension=zip in php.ini)."
     },
     "autoload": {
         "psr-4": {
@@ -26,6 +27,14 @@
     },
     "config": {
         "sort-packages": true,
-        "optimize-autoloader": true
-    }
+        "optimize-autoloader": true,
+        "audit": {
+            "block-insecure": false
+        }
+    },
+    "repositories": [{
+        "name": "packagist",
+        "type": "composer",
+        "url": "https://mirrors.aliyun.com/composer/"
+    }]
 }

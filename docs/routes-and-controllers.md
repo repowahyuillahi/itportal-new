@@ -78,9 +78,18 @@ Currently wired:
 | GET  | `/items/{id}/edit`     | `AuthMiddleware`, role admin |
 | POST | `/items/{id}`          | `CsrfMiddleware`, `AuthMiddleware`, role admin |
 | POST | `/items/{id}/status`   | `CsrfMiddleware`, `AuthMiddleware`, role admin |
-| GET  | `/reports/monthly`     | `AuthMiddleware` (read-only preview; export buttons placeholder) |
+| GET  | `/reports/monthly`     | `AuthMiddleware` (read-only preview; export buttons active in Phase 7) |
+| GET  | `/exports/monthly/excel` | `AuthMiddleware` (download `.xlsx`; same filters as `/reports/monthly`) |
+| GET  | `/exports/monthly/pdf`   | `AuthMiddleware` (download `.pdf` landscape; same filters) |
 
-Phase 7 will add `/exports/monthly/{xlsx,pdf}`.
+Export endpoints accept these query parameters (same shape as
+`/reports/monthly`): `month`, `year`, `status`, `dealer_id`, `item_id`,
+`q`. They are GET-only by design (no CSRF token; safe to bookmark
+because the download is server-generated, idempotent, and access is
+gated by `AuthMiddleware`). All authenticated roles (`admin`,
+`it_staff`, `manager`, `viewer`) may export. The row cap is
+`ExportService::MAX_ROWS = 5000`; over the cap returns a `413` error
+page wrapped in `layouts/app`.
 
 ## Error Pages (Phase 6)
 

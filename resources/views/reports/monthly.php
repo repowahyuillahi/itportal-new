@@ -31,14 +31,14 @@ $qs = http_build_query(array_filter([
 <section class="page-header">
     <h1>Laporan Bulanan</h1>
     <div class="page-header-actions">
-        <button type="button" class="btn" disabled aria-disabled="true"
-                title="Export Excel akan aktif di Phase 7">
-            Export Excel <span class="muted">(Phase 7)</span>
-        </button>
-        <button type="button" class="btn" disabled aria-disabled="true"
-                title="Export PDF akan aktif di Phase 7">
-            Export PDF <span class="muted">(Phase 7)</span>
-        </button>
+        <a class="btn" href="/exports/monthly/excel?<?= e($qs) ?>"
+           title="Download laporan dalam format Excel (.xlsx)">
+            Export Excel
+        </a>
+        <a class="btn" href="/exports/monthly/pdf?<?= e($qs) ?>"
+           title="Download laporan dalam format PDF (landscape)">
+            Export PDF
+        </a>
     </div>
 </section>
 

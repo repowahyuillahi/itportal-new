@@ -14,6 +14,7 @@ declare(strict_types=1);
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\DealerController;
+use App\Controllers\ExportController;
 use App\Controllers\HealthController;
 use App\Controllers\HomeController;
 use App\Controllers\ItemController;
@@ -64,7 +65,8 @@ $router->get('/items/{id}/edit',        [ItemController::class, 'edit'],        
 $router->post('/items/{id}',            [ItemController::class, 'update'],         [CsrfMiddleware::class, AuthMiddleware::class, $adminOnly()]);
 $router->post('/items/{id}/status',     [ItemController::class, 'toggleStatus'],   [CsrfMiddleware::class, AuthMiddleware::class, $adminOnly()]);
 
-// Reports (Phase 6 preview only). Export buttons placeholder; Phase 7 activates them.
-$router->get('/reports/monthly', [ReportController::class, 'monthly'], [AuthMiddleware::class]);
-
-// NOTE: Phase 7 will add /exports/monthly/{xlsx,pdf}.
+// Reports + exports (Phase 6 preview, Phase 7 download).
+// All authenticated roles may view and export; no CSRF on GET downloads.
+$router->get('/reports/monthly',        [ReportController::class, 'monthly'],      [AuthMiddleware::class]);
+$router->get('/exports/monthly/excel',  [ExportController::class, 'monthlyExcel'], [AuthMiddleware::class]);
+$router->get('/exports/monthly/pdf',    [ExportController::class, 'monthlyPdf'],   [AuthMiddleware::class]);
